@@ -12,17 +12,15 @@ int hbyte = 0x10101110; // a15..8
 int lbyte = 0x00000000; // a7..0
 
 void setup() {
-  // put your setup code here, to run once:
   Wire.begin(0x57); // 24fc1025 address.
-  Serial.begin(9600);
-
+  Serial.begin(9600); // initialize serial communication port in 9600bps.
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Wire.beginTransmission(addr);
-  Wire.write(hbyte);
-  Wire.write(lbyte);
+  Wire.beginTransmission(addr);  // I2C EEPROM's address.
+  Wire.write(hbyte); // High Byte.
+  Wire.write(lbyte); // Low Byte.
   Wire.endTransmission(addr);
   Wire.beginTransmission(addr);
   Wire.requestFrom(addr, 2);
@@ -33,9 +31,9 @@ void loop() {
     Serial.print(c);
   }
   if (lbyte < 0b11111111) {
-    lbyte += 0b1;
+    lbyte += 0b1; // add an one bit.
   } else if (lbyte == 0xff) {
-    lbyte = 0x0;
+    lbyte = 0x0; // sets lbyte to 0 and increment highbyte to next step.
     if (hbyte < 0b10101111) {
       hbyte += 0b1;
     } else {
